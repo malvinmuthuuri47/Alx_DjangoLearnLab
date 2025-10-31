@@ -20,3 +20,7 @@ This structured approach will provide you with a solid foundation in Django, pre
 > [!NOTE]
 > Task One: Introduction to Django Development Environment Setup
 > - This task aims to help the learner familiarize themselves with Django by setting up a Django development environment and creating a basic Django project.
+> Task Two: Implementing and interacting with Django models
+> - This task requires the learner to create a Model within a Django application, with the specified attributes, and using Django's ORM to perform database operations.
+> Task Three: Utilizing the Django Admin interface
+> - This task aims to give the learner practical experience with the Django admin interface by configuring the admin to manage the model created in task two
