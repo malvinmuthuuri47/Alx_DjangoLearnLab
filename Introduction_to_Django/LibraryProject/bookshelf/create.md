@@ -4,6 +4,4 @@ This file contains all the code that uses the django shell to create an instance
 
 from .models import Book
 
-book_one = Book(title="1984", author="George Orwell", publication_year=1949)
-
-book_one.save() 
+Book.objects.create(title="1984", author="George Orwell", publication_year=1949)
