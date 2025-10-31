@@ -4,4 +4,4 @@ This file contains all the code that uses the django shell to retrieve a django 
 
 from .models import Book
 
-book_one = Book.objects.get(title="1948")
+book_one = Book.objects.get(title="1984")
