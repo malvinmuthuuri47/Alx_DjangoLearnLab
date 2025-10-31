@@ -4,8 +4,8 @@ This file contains all the code that uses the django shell to update a django in
 
 from .models import Book
 
-book_one = Book.objects.get(pk=1)
+book = Book.objects.get(pk=1)
 
-book_one.title = "Nineteen Eighty-Four"
+book.title = "Nineteen Eighty-Four"
 
-book_one.save()
+book.save()
