@@ -18,5 +18,5 @@ Library.objects.get(name=library_name)
 books = Library.books.all()
 
 # Retrieve the librarian for a library
-library = Library.objects.get(name="Sample Lib")
+library = "Sample Lib"
 Librarian = Library.objects.get(library=library)
