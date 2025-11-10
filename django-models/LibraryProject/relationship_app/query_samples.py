@@ -8,7 +8,8 @@ from relationship_app import Book, Library, Author
 author = Author.objects.get(name="Mark")
 books_makr = Book.objects.filter(author=author)
 
-author1 = Author.objects.get(name="David")
+author_name = "David"
+author1 = Author.objects.get(name=author_name)
 books_makr1 = Book.objects.filter(author=author1)
 
 # List all books in a library
