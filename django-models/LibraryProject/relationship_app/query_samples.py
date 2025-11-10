@@ -19,4 +19,4 @@ books = Library.books.all()
 
 # Retrieve the librarian for a library
 library = "Sample Lib"
-Librarian = Library.objects.get(library=library)
+Librarian = Library.objects.get(library='')
