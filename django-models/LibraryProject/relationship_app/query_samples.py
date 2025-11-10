@@ -12,7 +12,9 @@ author1 = Author.objects.get(name="David")
 books_makr1 = Book.objects.filter(author=author1)
 
 # List all books in a library
-Library.objects.all()
+library_name = "ALX Sample"
+Library.objects.get(name=library_name)
+books = Library.books.all()
 
 # Retrieve the librarian for a library
 Library = Library.objects.get(name="ALX Sample")
