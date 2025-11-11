@@ -37,7 +37,7 @@ def add_book(request):
     return HttpResponse("Only Post method allowed", status=405)
 
 @csrf_exempt
-@permission_required('relationship_app.can_edit_book', raise_exception=True)
+@permission_required('relationship_app.can_change_book', raise_exception=True)
 def edit_book(request, pk):
     if request.method == 'POST':
         book = get_object_or_404(Book, pk=pk)
