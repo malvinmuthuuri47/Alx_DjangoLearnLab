@@ -18,7 +18,6 @@ class LibraryDetailView(DetailView):
 
 def home(request):
     return render(request, 'relationship_app/logout.html')
-    # return HttpResponse("<h4>You are landing in the home page</h4>")
 
 def register(request):
     if request.method == 'POST':
