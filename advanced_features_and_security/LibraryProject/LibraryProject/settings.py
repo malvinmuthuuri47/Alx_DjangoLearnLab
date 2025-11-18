@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from csp.constants import SELF
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +24,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!8vq+pfn2_$@2+%-m(@@ml6j_t=@rtf7%7qlx1$7d9&(t*aqp6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+# Prevent insecure JavaScript from being executed
+SECURE_BROWSER_XSS_FILTER = True
+
+# Prevent browsers from MIME-type sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Prevent clickjacking
+X_FRAME_OPTIONS = "DENY"
+
+# Only send cookies over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
 
@@ -31,6 +45,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
 # Application definition
 
 INSTALLED_APPS = [
+    'csp',
     'bookshelf.apps.BookshelfConfig',
     'relationship_app.apps.RelationshipAppConfig',
     'django.contrib.admin',
@@ -50,6 +65,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Implementing Content Security Policy (CSP)
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": ("'self'",),
+        "script-src": ("'self'"),
+        "style-src": ("'self'"),
+    }
+}
 
 ROOT_URLCONF = 'LibraryProject.urls'
 
