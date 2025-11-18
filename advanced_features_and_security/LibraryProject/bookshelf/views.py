@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import Article
 from django.contrib.auth.decorators import permission_required
+from .forms import ArticleForm
 
 # Create your views here.
 @permission_required('bookshelf.can_view', raise_exception=True)
@@ -28,3 +29,13 @@ def edit_article(request, article_id):
 def delete_article(request, article_id):
     Article.objects.get(id=article_id).delete()
     return JsonResponse({"message": "Article deleted"})
+
+def createArticle(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = ArticleForm()
+    return render(request, 'form_example.html', {'form':form})
