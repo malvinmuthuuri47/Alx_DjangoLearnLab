@@ -1,4 +1,4 @@
+__pycache__/*
+api/__pycache__/*
+api/migrations/__pycache__/*
 .venv/
-api_project/api/__pycache__/
-api_project/api/migrations/__pycache__/
-api_project/api_project/__pycache__/
