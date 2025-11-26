@@ -14,7 +14,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     """
     The serializer for the Author model with a nested serializer for the books associated with the author
     """
-    books = BookSerializer()
+    books = BookSerializer(many=True, read_only=True)
     
     class Meta:
         model = Author
