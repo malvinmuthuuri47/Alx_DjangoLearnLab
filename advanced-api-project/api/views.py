@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from .serializers import BookSerializer
 from .models import Book
 from django.urls import reverse_lazy
+from django.db.models import Q
 
 # Create your views here.
 # class BookListAPI(ListAPIView):
@@ -17,9 +18,40 @@ class BookListView(ListView):
     """
     A class-based view to list all books in the database
     """
-    models = Book
+    model = Book
     template_name = 'api/book_list.html'
     context_object_name = 'books'
+
+    def get_queryset(self):
+        """
+        This method defines the ordering configuration for the Book model on the fields listed in the allowed fields list.
+
+        The method also defines search functionality for the book model based on the book title and author name.
+
+        The method also sets up filtering on the Books by using the author name field.
+        """
+        queryset = super().get_queryset()
+
+        # filtering
+        author = self.request.GET.get("author")
+        if author:
+            queryset = queryset.filter(author__name__icontains=author)
+        
+        # search functionality
+        search = self.request.GET.get("search")
+        if search:
+            queryset = queryset.filter(
+                Q(title__icontains=search) |
+                Q(author__name__icontains=search)
+            )
+        
+        # ordering functionality
+        order = self.request.GET.get("order")
+        allowed_fields = ["title", "publication_year"]
+        if order in allowed_fields:
+            queryset = queryset.order_by(order)
+        
+        return queryset
 
 # class BookDetailAPI(RetrieveAPIView):
 #     """
