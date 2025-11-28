@@ -5,8 +5,8 @@ from .serializers import BookSerializer
 from .models import Book
 from django.urls import reverse_lazy
 from django.db.models import Q
-from rest_framework import generics, filters
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework
+from rest_framework import generics, filters.OrderingFilter, filters.SearchFilter
 
 # Create your views here.
 # class BookListAPI(ListAPIView):
@@ -16,13 +16,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 #     queryset = Book.objects.all()
 #     serializer_class = BookSerializer
 #     permission_classes = [IsAuthenticatedOrReadOnly]
-
-COMMON_FILTER_BACKENDS = [
-    DjangoFilterBackend,
-    filters.SearchFilter,
-    filters.OrderingFilter,
-]
-
 class BookListView(ListView):
     """
     A class-based view to list all books in the database
