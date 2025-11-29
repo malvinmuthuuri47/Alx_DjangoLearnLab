@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from django_filters import rest_framework
 from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 # class BookListAPI(ListAPIView):
