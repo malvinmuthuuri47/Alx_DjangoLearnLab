@@ -3,9 +3,13 @@ from .models import Book, Author
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
+from django.contrib.auth.models import User
 
 class BookModelTest(TestCase):
     def setUp(self):
+        self.user = User.objects.create_user(
+            username='John', password='123456'
+        )
         self.author = Author.objects.create(name="Jurgen")
         
         self.book1 = Book.objects.create(title='Flask Introduction', publication_year=2022, author=self.author)
@@ -47,6 +51,8 @@ class BookModelTest(TestCase):
     
     # test the createview
     def test_book_create_view(self):
+        self.client.login(username='John', password='12345')
+        
         response = self.client.post(reverse('book-create'), {
             "title": "Psychology 101",
             "publication_year": 2019,
