@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .models import Book, Author
 from django.urls import reverse
+from rest_framework.test import APITestCase
 
 class BookModelTest(TestCase):
     def setUp(self):
