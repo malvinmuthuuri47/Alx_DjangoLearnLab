@@ -53,6 +53,8 @@ class BookModelTest(TestCase):
             "author": self.author.id,
         })
 
+        data = response.data
+
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Book.objects.count(), 3)
         self.assertTrue(Book.objects.filter(title="Psychology 101").exists())
