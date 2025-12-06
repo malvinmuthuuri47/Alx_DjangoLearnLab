@@ -1,0 +1,16 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <h2>Welcome, {{ user.username }}</h2>
+
+    <h3>Edit Your Profile</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Profile</button>
+    </form>
+
+    <a href="{% url 'logout' %}">Logout</a>
+{% endblock %}
