@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
-from .forms import CustomUserCreationForm, ProfileUpdateForm, PostForm
-from .models import Post
+from .forms import CustomUserCreationForm, ProfileUpdateForm, PostForm, CommentForm
+from .models import Post, Comment
 from django.views.generic import (
     ListView,
     DetailView,
@@ -13,7 +13,7 @@ from django.views.generic import (
     DeleteView
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 # registration view
 def register_view(request):
@@ -63,6 +63,12 @@ class PostDetailView(DetailView):
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = self.object.comments.all()
+        context['comment_form'] = CommentForm()
+        return context
+
 class PostCreateView(LoginRequiredMixin, CreateView):
     '''
     This is a View that allows creation of a new post and the user
@@ -79,7 +85,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     
     # redirect to the newly created post after success
     def get_success_url(self):
-        return reverse_lazy('post-detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('post-detail', kwargs={'pk': self.kwargs['post_id']})
     
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     '''View to update an existing post'''
@@ -105,3 +111,43 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+# Comment Views
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        form.instance.post = post
+        form.instance.author = self.request.user
+        messages.success(self.request, 'Your comment has been posted!')
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('post-detail', kwargs={'pk': self.kwargs['pk']})
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
+    
+    def get_success_url(self):
+        messages.success(self.request, 'Your comment has been updated!')
+        return reverse('post-detail', kwargs={'pk': self.object.post.pk})
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_delete.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
+    
+    def get_success_url(self):
+        messages.success(self.request, 'Your comment has been deleted.')
+        return reverse('post-detail', kwargs={'pk': self.object.post.pk})

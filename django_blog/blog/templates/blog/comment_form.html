@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Edit Comment - Django Blog{% endblock %}
+
+{% block content %}
+    <h1>Edit Your Comment</h1>
+
+    <p>On Post: <strong>{{ object.post.title }} </strong></p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            {{ form.non_field_errors }}
+        {% endif %}
+
+        <label>Comment:</label>
+        {{ form.content }}
+        {% if form.content.errors %}
+            <span>{{ form.content.errors.0 }}</span>
+        {% endif %}
+
+        <div>
+            <button type="submit">Update Comment</button>
+            <a href="{% url 'post-detail' object.post.pk %}">Cancel</a>
+        </div>
+    </form>
+{% endblock %}
