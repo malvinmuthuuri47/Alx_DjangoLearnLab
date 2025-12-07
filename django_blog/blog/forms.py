@@ -43,7 +43,7 @@ class PostForm(forms.ModelForm):
             }),
         }
         labels = {
-            'tags': 'Tags'
+            'tags': TagWidget(),
         }
         help_texts = {
             'tags': 'Separate tags with commas'
