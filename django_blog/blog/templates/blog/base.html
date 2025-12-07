@@ -4,6 +4,22 @@
     <title>{% block title %}My Site{% endblock %}</title>
 </head>
 <body>
+    <header>
+        <li><a href="{% url 'posts' %}">Home</a></li>
+
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'post-create' %}">New Post</a></li>
+            <li><a href="{% url 'profile' %}">Profile ({{ user.username }})</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Register</a></li>
+        {% endif %}
+        <form method="GET" action="{% url 'search' %}">
+            <input type="text" name="q" placeholder="Search posts..." value="{{ query }}" required>
+            <button type="submit">Search</button>
+        </form>
+    </header>
     {% if messages %}
         {% for message in messages %}
             <div class="messages {{ message.tags }}">
