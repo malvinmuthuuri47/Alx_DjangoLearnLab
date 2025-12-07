@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from .forms import CustomUserCreationForm, ProfileUpdateForm, PostForm, CommentForm
-from .models import Post, Comment, Tag
+from .models import Post, Comment
 from django.views.generic import (
     ListView,
     DetailView,
@@ -15,6 +15,7 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from django.db.models import Q
+from taggit.models import Tag
 
 # registration view
 def register_view(request):
@@ -182,7 +183,10 @@ class SearchResultsView(ListView):
                 Q(content__icontains=query) |
                 Q(tags__name__icontains=query)
             ).distinct()
-        return Post.objects.none()
+        else:
+            posts = Post.objects.none()
+        
+        return posts
     
     def get_context_Data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -197,9 +201,9 @@ class TaggedPostsView(ListView):
     def get_queryset(self):
         tag_slug = self.kwargs.get('tag_slug')
         self.tag = get_object_or_404(Tag, slug=tag_slug)
-        return Post.objects.filter(tags=self.tag)
+        return Post.objects.filter(tags__slug=tag_slug)
 
-    def get_Context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_Data(**kwargs)
         context['tag'] = self.tag
         return context
