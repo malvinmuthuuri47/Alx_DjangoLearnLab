@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'accounts.apps.AccountsConfig',
+    'posts.apps.PostsConfig',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +62,10 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'rest_framework.filters.SearchFilter',
+    ],
 }
 
 ROOT_URLCONF = 'social_media_api.urls'

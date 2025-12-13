@@ -2,3 +2,6 @@ accounts/__pycache__/*
 accounts/migrations/*
 accounts/migrations/__pycache__/*
 social_media_api/__pycache__/*
+posts/__pycache__/*
+db.sqlite3
+posts/migrations/
