@@ -48,3 +48,23 @@ class UserLoginSerializer(serializers.Serializer):
             "user_id": user.id,
             "username": user.username
         }
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    followers_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'bio',
+            'profile_picture',
+            'followers_count'
+        ]
+
+        read_only_fields = ['username', 'followers_count']
+    
+    def get_followers_count(self, obj):
+        if (hasattr(obj, 'followers')):
+            return obj.followers.count()
+        
+        return 0
