@@ -18,6 +18,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             bio = validated_data.get('bio', ''),
             profile_picture = validated_data.get('profile_picture', None)
         )
+
+        Token.objects.create(user=user)
+
         return user
 
 class UserLoginSerializer(serializers.Serializer):
@@ -33,7 +36,9 @@ class UserLoginSerializer(serializers.Serializer):
         if not user:
             raise serializers.ValidationError("Invalid credentials")
         
-        token, _ = Token.objects.get_or_create(user=user)
+        # Token rotation
+        Token.objects.filter(user=user).delete()
+        token = Token.objects.create(user=user)
 
         return {
             "token": token.key,
