@@ -1,8 +1,10 @@
-from rest_framework import serializers
-# from .models import CustomUser
+from rest_framework import serializers, status
+from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 User = get_user_model()
 
@@ -68,3 +70,44 @@ class UserProfileSerializer(serializers.ModelSerializer):
             return obj.followers.count()
         
         return 0
+
+class FollowSerializer(APIView):
+    user_id = serializers.IntegerField()
+
+    def validate_user_id(self, value):
+        request = self.context['request']
+        if request.user.id == value:
+            raise serializers.ValidationError("You cannot follow yourself.")
+        
+        if not User.objects.filter(id=value).exists():
+            raise serializers.ValidationError("User does not exist.")
+        
+        return value
+    # permission_classes = [IsAuthenticated]
+
+    # def post(self, request, user_id):
+    #     serializer = FollowSerializer(
+    #         data={'user_id': user_id},
+    #         context={'request': request}
+    #     )
+
+    #     serializer.is_valid(raise_exception=True)
+
+    #     target_user = User.objects.get(id=serializer.validated_data['user_id'])
+    #     request.user.following.add(target_user)
+
+    #     return Response(
+    #         {"detail": "Followed successfully"},
+    #         status=status.HTTP_200_OK
+    #     )
+    # user_id = serializers.IntegerField()
+
+    # def validate_user_id(self, value):
+    #     request = self.context['request']
+    #     if request.user.id == value:
+    #         raise serializers.ValidationError("You cannot follow yourself.")
+        
+    #     if not User.objects.filter(id=value).exists():
+    #         raise serializers.ValidationError("User does not exist.")
+    
+    #     return value
