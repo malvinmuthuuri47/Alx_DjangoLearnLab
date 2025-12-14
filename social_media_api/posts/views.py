@@ -22,7 +22,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    # pagination_class = PostPagination
+    pagination_class = PostPagination
 
     def get_queryset(self):
         return Comment.objects.filter(post_id=self.kwargs['post_pk'])
