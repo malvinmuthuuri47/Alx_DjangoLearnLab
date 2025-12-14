@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested.routers import NestedDefaultRouter
-from .views import PostViewSet, CommentViewSet
+from .views import PostViewSet, CommentViewSet, FeedView
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet, basename='post')

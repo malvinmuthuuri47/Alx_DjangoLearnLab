@@ -4,6 +4,9 @@ from rest_framework.filters import SearchFilter
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .pagination import PostPagination
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
 # Create your views here.
 class PostViewSet(viewsets.ModelViewSet):
@@ -17,6 +20,22 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+    
+    @action(
+        detail=False,
+        methods=['get'],
+        permission_classes=[permissions.IsAuthenticated],
+        url_path='feed'
+    )
+    def feed(self, request):
+        following_users = request.user.following.all()
+
+        posts = Post.objects.filter(
+            author__in=following_users
+        ).order_by('-created_at')
+
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
@@ -32,3 +51,14 @@ class CommentViewSet(viewsets.ModelViewSet):
             user=self.request.user,
             post_id=self.kwargs['post_pk']
         )
+
+class FeedView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        # get all posts by users that the current user follows
+        following_users = request.user.following.all()
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
