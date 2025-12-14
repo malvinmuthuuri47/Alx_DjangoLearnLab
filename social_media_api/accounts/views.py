@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserProfileSerializer, FollowSerializer
 from .models import CustomUser
 from django.contrib.auth import get_user_model
@@ -23,7 +23,7 @@ class LoginView(APIView):
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         user = request.user
@@ -31,7 +31,7 @@ class UserProfileView(APIView):
         return Response(serializer.data)
 
 class FollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         if (request.user.id == user_id):
@@ -69,7 +69,7 @@ class FollowUserView(APIView):
         # )
 
 class UnfollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         if request.user.id == user_id:
@@ -97,7 +97,7 @@ class UnfollowUserView(APIView):
         # )
 
 class FeedView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         # get all posts by users that the current user follows
